@@ -14,7 +14,7 @@
 #  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #  *
 #  * Ported to Python by: Sreeharsha U. <sreeharsha6196@gmail.com>
-#  *			  		  Swarnashree M. S. <ms.swarnashree@gmail.com>
+#  *			  Swarnashree M. S. <ms.swarnashree@gmail.com>
 #  */
 
 # Network topology
