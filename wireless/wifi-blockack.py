@@ -15,7 +15,7 @@
 #  * along with this program; if not, write to the Free Software
 #  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #  *
-#  * Ported to Python by: Shristi A. K. <shrishtiak26894@gmail.com>
+#  * Ported to Python by: Shrishti A. K. <shrishtiak26894@gmail.com>
 #  *                      Kavya Sree Bhagavatula <kavyasbhagavatula@gmail.com>
 #  *                      Mohit P. Tahiliani <tahiliani@nitk.edu.in>
 #  */
