@@ -40,41 +40,41 @@ def main(argv):
 	#
 	# Set up some default values for the simulation.
 	#
-	ns.core.Config.SetDefault("ns3::OnOffApplication::PacketSize", ns.core.UintegerValue(137))
+	ns.core.Config.SetDefault ("ns3::OnOffApplication::PacketSize", ns.core.UintegerValue (137))
 
 	# ??? try and stick 15kb/s into the data rate
-	ns.core.Config.SetDefault("ns3::OnOffApplication::DataRate", ns.core.StringValue("14kb/s"))
+	ns.core.Config.SetDefault ("ns3::OnOffApplication::DataRate", ns.core.StringValue ("14kb/s"))
 
 	#
 	# Default number of nodes in the star. Overridable by command line argument.
 	#
-	cmd = ns.core.CommandLine()
+	cmd = ns.core.CommandLine ()
 	cmd.nSpokes = 8
-	cmd.AddValue("nSpokes", "Number of nodes to place in the star")
-	cmd.Parse(sys.argv)
+	cmd.AddValue ("nSpokes", "Number of nodes to place in the star")
+	cmd.Parse (sys.argv)
 
 	nSpokes = int(cmd.nSpokes)
 
 	print "Build star topology."
-	pointToPoint = ns.point_to_point.PointToPointHelper()
-	pointToPoint.SetDeviceAttribute("DataRate", ns.core.StringValue("5Mbps"))
-	pointToPoint.SetChannelAttribute("Delay", ns.core.StringValue("2ms"))
-	star = ns.point_to_point_layout.PointToPointStarHelper(nSpokes, pointToPoint)
+	pointToPoint = ns.point_to_point.PointToPointHelper ()
+	pointToPoint.SetDeviceAttribute ("DataRate", ns.core.StringValue ("5Mbps"))
+	pointToPoint.SetChannelAttribute ("Delay", ns.core.StringValue ("2ms"))
+	star = ns.point_to_point_layout.PointToPointStarHelper (nSpokes, pointToPoint)
 
 	print "Install internet stack on all nodes."
-	internet = ns.internet.InternetStackHelper()
-	star.InstallStack(internet)
+	internet = ns.internet.InternetStackHelper ()
+	star.InstallStack (internet)
 
 	print "Assign IP Addresses."
-	star.AssignIpv4Addresses (ns.internet.Ipv4AddressHelper (ns.network.Ipv4Address("10.1.1.0"), ns.network.Ipv4Mask("255.255.255.0")))
+	star.AssignIpv4Addresses (ns.internet.Ipv4AddressHelper (ns.network.Ipv4Address ("10.1.1.0"), ns.network.Ipv4Mask ("255.255.255.0")))
 
 	print "Create Applications."
 	#
 	# Create a packet sink on the star "hub" to receive packets.
 	# 
 	port = 50000
-	hubLocalAddress = ns.network.Address(ns.network.InetSocketAddress(ns.network.Ipv4Address.GetAny (), port))
-	packetSinkHelper = ns.applications.PacketSinkHelper("ns3::TcpSocketFactory", hubLocalAddress)
+	hubLocalAddress = ns.network.Address (ns.network.InetSocketAddress (ns.network.Ipv4Address.GetAny (), port))
+	packetSinkHelper = ns.applications.PacketSinkHelper ("ns3::TcpSocketFactory", hubLocalAddress)
 	hubApp = packetSinkHelper.Install (star.GetHub ())
 	hubApp.Start (ns.core.Seconds (1.0))
 	hubApp.Stop (ns.core.Seconds (10.0))
@@ -82,14 +82,14 @@ def main(argv):
 	#
 	# Create OnOff applications to send TCP to the hub, one on each spoke node.
 	#
-	onOffHelper = ns.applications.OnOffHelper("ns3::TcpSocketFactory", ns.network.Address ())
+	onOffHelper = ns.applications.OnOffHelper ("ns3::TcpSocketFactory", ns.network.Address ())
 	onOffHelper.SetAttribute ("OnTime", ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=1]"))
 	onOffHelper.SetAttribute ("OffTime", ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=0]"))
 
-	spokeApps = ns.network.ApplicationContainer()
+	spokeApps = ns.network.ApplicationContainer ()
 
-	for i in range(0, star.SpokeCount()):
-		remoteAddress = ns.network.AddressValue(ns.network.InetSocketAddress(star.GetHubIpv4Address (i), port))
+	for i in range(0, star.SpokeCount ()):
+		remoteAddress = ns.network.AddressValue (ns.network.InetSocketAddress (star.GetHubIpv4Address (i), port))
 		onOffHelper.SetAttribute ("Remote", remoteAddress)
 		spokeApps = onOffHelper.Install (star.GetSpokeNode (i))
 
@@ -100,20 +100,20 @@ def main(argv):
 	#
 	# Turn on global static routing so we can actually be routed across the star.
 	#
-	ns.internet.Ipv4GlobalRoutingHelper.PopulateRoutingTables()
+	ns.internet.Ipv4GlobalRoutingHelper.PopulateRoutingTables ()
 
 	print "Enable pcap tracing."
 	#
 	# Do pcap tracing on all point-to-point devices on all nodes.
 	#
-	pointToPoint.EnablePcapAll("star-py")
+	pointToPoint.EnablePcapAll ("star-py")
 
 	print "Run Simulation."
-	ns.core.Simulator.Stop(ns.core.Seconds(12))
-	ns.core.Simulator.Run()
-	ns.core.Simulator.Destroy()
+	ns.core.Simulator.Stop (ns.core.Seconds (12))
+	ns.core.Simulator.Run ()
+	ns.core.Simulator.Destroy ()
 	print "Done."
 
 if __name__ == '__main__':
     import sys
-    main(sys.argv)
+    main (sys.argv)
