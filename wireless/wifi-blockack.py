@@ -53,19 +53,19 @@ def main(argv):
     ns.core.LogComponentEnable ("EdcaTxopN", ns.core.LOG_LEVEL_DEBUG)
     ns.core.LogComponentEnable ("BlockAckManager", ns.core.LOG_LEVEL_INFO)
 
-    sta = ns.network.Node()
-    ap = ns.network.Node()
+    sta = ns.network.Node ()
+    ap = ns.network.Node ()
 
-    channel = ns.wifi.YansWifiChannelHelper.Default()
-    phy = ns.wifi.YansWifiPhyHelper.Default()
-    phy.SetChannel(channel.Create())
+    channel = ns.wifi.YansWifiChannelHelper.Default ()
+    phy = ns.wifi.YansWifiPhyHelper.Default ()
+    phy.SetChannel (channel.Create ())
 
-    wifi = ns.wifi.WifiHelper.Default()
-    mac = ns.wifi.QosWifiMacHelper.Default()
+    wifi = ns.wifi.WifiHelper.Default ()
+    mac = ns.wifi.QosWifiMacHelper.Default ()
     # disable fragmentation
-    wifi.SetRemoteStationManager("ns3::AarfWifiManager", "FragmentationThreshold", ns.core.UintegerValue (2500))
+    wifi.SetRemoteStationManager ("ns3::AarfWifiManager", "FragmentationThreshold", ns.core.UintegerValue (2500))
     
-    ssid = ns.wifi.Ssid("My-network")
+    ssid = ns.wifi.Ssid ("My-network")
     
     mac.SetType ("ns3::StaWifiMac",
                  "QosSupported", ns.core.BooleanValue (True),
@@ -86,7 +86,7 @@ def main(argv):
     apDevice = wifi.Install (phy, mac, ap)
 
     # Setting mobility model
-    mobility = ns.mobility.MobilityHelper()
+    mobility = ns.mobility.MobilityHelper ()
 
     mobility.SetPositionAllocator ("ns3::GridPositionAllocator",
                                    "MinX", ns.core.DoubleValue (0.0),
@@ -104,22 +104,22 @@ def main(argv):
     mobility.Install (ap)
 
     # Internet stack
-    stack = ns.internet.InternetStackHelper()
+    stack = ns.internet.InternetStackHelper ()
     stack.Install (sta)
     stack.Install (ap)
 
-    address = ns.internet.Ipv4AddressHelper()
-    address.SetBase (ns.network.Ipv4Address("192.168.1.0"), ns.network.Ipv4Mask("255.255.255.0"))
-    staIf = ns.internet.Ipv4InterfaceContainer()
-    apIf = ns.internet.Ipv4InterfaceContainer()
+    address = ns.internet.Ipv4AddressHelper ()
+    address.SetBase (ns.network.Ipv4Address ("192.168.1.0"), ns.network.Ipv4Mask ("255.255.255.0"))
+    staIf = ns.internet.Ipv4InterfaceContainer ()
+    apIf = ns.internet.Ipv4InterfaceContainer ()
     staIf = address.Assign (staDevice)
     apIf = address.Assign (apDevice)
 
     # Setting applications
     port = 9
 
-    dataRate = ns.network.DataRate("1Mb/s")
-    onOff = ns.applications.OnOffHelper("ns3::UdpSocketFactory", ns.network.Address (ns.network.InetSocketAddress (apIf.GetAddress (0), port)))
+    dataRate = ns.network.DataRate ("1Mb/s")
+    onOff = ns.applications.OnOffHelper ("ns3::UdpSocketFactory", ns.network.Address (ns.network.InetSocketAddress (apIf.GetAddress (0), port)))
     onOff.SetAttribute ("DataRate", ns.network.DataRateValue (dataRate))
     onOff.SetAttribute ("OnTime", ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=0.01]"))
     onOff.SetAttribute ("OffTime", ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=8]"))
@@ -132,12 +132,12 @@ def main(argv):
 
     ns.internet.Ipv4GlobalRoutingHelper.PopulateRoutingTables ()
 
-    ns.core.Simulator.Stop(ns.core.Seconds(10.0))
+    ns.core.Simulator.Stop (ns.core.Seconds (10.0))
 
-    phy.EnablePcap("test-blockack-2", ap.GetId(), 0)
-    ns.core.Simulator.Run()
-    ns.core.Simulator.Destroy()
+    phy.EnablePcap ("wifi-blockack-py", ap.GetId (), 0)
+    ns.core.Simulator.Run ()
+    ns.core.Simulator.Destroy ()
 
 if __name__ == '__main__':
     import sys
-    sys.exit(main(sys.argv))
+    sys.exit (main (sys.argv))
