@@ -54,10 +54,10 @@ def main(argv):
     cmd.AddValue ("frequency", "Whether working in the 2.4 or 5.0 GHz band (other values gets rejected)")
     cmd.AddValue ("distance", "Distance in meters between the station and the access point")
     cmd.AddValue ("simulationTime", "Simulation time in seconds")
-    cmd.AddValue ("udp", "UDP if set to 1, TCP otherwise")
+    cmd.AddValue ("udp", "UDP if set to True, TCP otherwise")
     cmd.Parse (sys.argv)
 
-    udp = bool(cmd.udp)
+    udp = cmd.udp
     simulationTime = float(cmd.simulationTime)
     distance = float(cmd.distance)
     frequency = float(cmd.frequency)
@@ -143,7 +143,7 @@ def main(argv):
                 # Setting applications
                 serverApp = ns.network.ApplicationContainer ()
                 sinkApp = ns.network.ApplicationContainer ()
-                if udp:
+                if udp == "True":
                     # UDP flow
                     myServer=ns.applications.UdpServerHelper (9)
                     serverApp = myServer.Install (ns.network.NodeContainer (wifiStaNode.Get (0)))
@@ -171,7 +171,7 @@ def main(argv):
                     onoff.SetAttribute ("OnTime",  ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=1]"))
                     onoff.SetAttribute ("OffTime", ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=0]"))
                     onoff.SetAttribute ("PacketSize", ns.core.UintegerValue (payloadSize))
-                    onoff.SetAttribute ("DataRate", ns.core.DataRateValue (1000000000)) # bit/s
+                    onoff.SetAttribute ("DataRate", ns.network.DataRateValue (ns.network.DataRate (1000000000))) # bit/s
                     apps = ns.network.ApplicationContainer ()
 
                     remoteAddress = ns.network.AddressValue (ns.network.InetSocketAddress (staNodeInterface.GetAddress (0), port))
@@ -187,7 +187,7 @@ def main(argv):
                 ns.core.Simulator.Destroy ()
 
                 throughput = 0
-                if udp:
+                if udp == "True":
                     # UDP
                     totalPacketsThrough = serverApp.Get (0).GetReceived ()
                     throughput = totalPacketsThrough * payloadSize * 8 / (simulationTime * 1000000.0) # Mbit/s
