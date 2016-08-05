@@ -107,7 +107,7 @@ def main(argv):
                  "Ssid", ns.wifi.SsidValue (ssid),
                  "BeaconInterval", ns.core.TimeValue (ns.core.MicroSeconds (102400)),
                  "BeaconGeneration", ns.core.BooleanValue (True),
-			     "BE_MaxAmpduSize", ns.core.UintegerValue (maxAmpduSize))
+				 "BE_MaxAmpduSize", ns.core.UintegerValue (maxAmpduSize))
 
   	apDevice = ns.network.NetDeviceContainer ()
  	apDevice = wifi.Install (phy, mac, wifiApNode)
