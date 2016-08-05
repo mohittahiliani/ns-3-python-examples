@@ -82,7 +82,7 @@ def main(argv):
                 phy = ns.wifi.YansWifiPhyHelper.Default ()
                 phy.SetChannel (channel.Create ())
                 
-				# Set guard interval
+		# Set guard interval
                 phy.Set ("ShortGuardEnabled", ns.core.BooleanValue (k))
 
                 wifi = ns.wifi.WifiHelper.Default ()
@@ -131,46 +131,46 @@ def main(argv):
                 staNodeInterface = address.Assign (staDevice)
                 apNodeInterface = address.Assign (apDevice)
 
-				# Setting applications
+		# Setting applications
                 serverApp = ns.network.ApplicationContainer ()
                 sinkApp = ns.network.ApplicationContainer ()
                 if udp == "True":
-					# UDP flow
-					myServer = ns.applications.UdpServerHelper (9)
-					serverApp = myServer.Install (ns.network.NodeContainer (wifiStaNode.Get (0)))
-					serverApp.Start (ns.core.Seconds (0.0))
-					serverApp.Stop (ns.core.Seconds (simulationTime + 1))
+			# UDP flow
+			myServer = ns.applications.UdpServerHelper (9)
+			serverApp = myServer.Install (ns.network.NodeContainer (wifiStaNode.Get (0)))
+			serverApp.Start (ns.core.Seconds (0.0))
+			serverApp.Stop (ns.core.Seconds (simulationTime + 1))
 
-					myClient = ns.applications.UdpClientHelper (staNodeInterface.GetAddress (0), 9)
-					myClient.SetAttribute ("MaxPackets", ns.core.UintegerValue (4294967295))
-					myClient.SetAttribute ("Interval", ns.core.TimeValue (ns.core.Time ("0.00001")))  # packets/s
-					myClient.SetAttribute ("PacketSize", ns.core.UintegerValue (payloadSize))
+			myClient = ns.applications.UdpClientHelper (staNodeInterface.GetAddress (0), 9)
+			myClient.SetAttribute ("MaxPackets", ns.core.UintegerValue (4294967295))
+			myClient.SetAttribute ("Interval", ns.core.TimeValue (ns.core.Time ("0.00001")))  # packets/s
+			myClient.SetAttribute ("PacketSize", ns.core.UintegerValue (payloadSize))
 
-					clientApp = myClient.Install (ns.network.NodeContainer (wifiApNode.Get (0)))
-					clientApp.Start (ns.core.Seconds (1.0))
-					clientApp.Stop (ns.core.Seconds (simulationTime + 1))
+			clientApp = myClient.Install (ns.network.NodeContainer (wifiApNode.Get (0)))
+			clientApp.Start (ns.core.Seconds (1.0))
+			clientApp.Stop (ns.core.Seconds (simulationTime + 1))
                 else:
-					# TCP flow
-					port = 50000
-					apLocalAddress = ns.network.Address (ns.network.InetSocketAddress (ns.network.Ipv4Address.GetAny (), port))
-					packetSinkHelper = ns.applications.PacketSinkHelper ("ns3::TcpSocketFactory", apLocalAddress)
-					sinkApp = packetSinkHelper.Install (wifiStaNode.Get (0))
+			# TCP flow
+			port = 50000
+			apLocalAddress = ns.network.Address (ns.network.InetSocketAddress (ns.network.Ipv4Address.GetAny (), port))
+			packetSinkHelper = ns.applications.PacketSinkHelper ("ns3::TcpSocketFactory", apLocalAddress)
+			sinkApp = packetSinkHelper.Install (wifiStaNode.Get (0))
 
-					sinkApp.Start (ns.core.Seconds (0.0))
-					sinkApp.Stop (ns.core.Seconds (simulationTime + 1))
+			sinkApp.Start (ns.core.Seconds (0.0))
+			sinkApp.Stop (ns.core.Seconds (simulationTime + 1))
 
-					onoff = ns.applications.OnOffHelper ("ns3::TcpSocketFactory", ns.network.Ipv4Address.GetAny ())
-					onoff.SetAttribute ("OnTime",  ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=1]"))
-					onoff.SetAttribute ("OffTime", ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=0]"))
-					onoff.SetAttribute ("PacketSize", ns.core.UintegerValue (payloadSize))
-					onoff.SetAttribute ("DataRate", ns.network.DataRateValue (ns.network.DataRate (1000000000))) # bit/s
-					apps = ns.network.ApplicationContainer ()
+			onoff = ns.applications.OnOffHelper ("ns3::TcpSocketFactory", ns.network.Ipv4Address.GetAny ())
+			onoff.SetAttribute ("OnTime",  ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=1]"))
+			onoff.SetAttribute ("OffTime", ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=0]"))
+			onoff.SetAttribute ("PacketSize", ns.core.UintegerValue (payloadSize))
+			onoff.SetAttribute ("DataRate", ns.network.DataRateValue (ns.network.DataRate (1000000000))) # bit/s
+			apps = ns.network.ApplicationContainer ()
 
-					remoteAddress = ns.network.AddressValue (ns.network.InetSocketAddress (staNodeInterface.GetAddress (0), port))
-					onoff.SetAttribute ("Remote", remoteAddress)
-					apps.Add (onoff.Install (wifiApNode.Get (0)))
-					apps.Start (ns.core.Seconds (1.0))
-					apps.Stop (ns.core.Seconds (simulationTime + 1))
+			remoteAddress = ns.network.AddressValue (ns.network.InetSocketAddress (staNodeInterface.GetAddress (0), port))
+			onoff.SetAttribute ("Remote", remoteAddress)
+			apps.Add (onoff.Install (wifiApNode.Get (0)))
+			apps.Start (ns.core.Seconds (1.0))
+			apps.Stop (ns.core.Seconds (simulationTime + 1))
 
                 ns.internet.Ipv4GlobalRoutingHelper.PopulateRoutingTables ()
 
