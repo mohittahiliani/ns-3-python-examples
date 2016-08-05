@@ -136,7 +136,6 @@ def main(argv):
                 sinkApp = ns.network.ApplicationContainer ()
                 if udp == "True":
 					# UDP flow
-					print "I'm here!"
 					myServer = ns.applications.UdpServerHelper (9)
 					serverApp = myServer.Install (ns.network.NodeContainer (wifiStaNode.Get (0)))
 					serverApp.Start (ns.core.Seconds (0.0))
