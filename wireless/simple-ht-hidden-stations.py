@@ -96,18 +96,18 @@ def main(argv):
 
   	ssid = ns.wifi.Ssid ("simple-mpdu-aggregation")
   	mac.SetType ("ns3::StaWifiMac",
-                 "Ssid", ns.wifi.SsidValue (ssid),
-                 "ActiveProbing", ns.core.BooleanValue (False),
-				 "BE_MaxAmpduSize", ns.core.UintegerValue (maxAmpduSize))
+				"Ssid", ns.wifi.SsidValue (ssid),
+				"ActiveProbing", ns.core.BooleanValue (False),
+				"BE_MaxAmpduSize", ns.core.UintegerValue (maxAmpduSize))
 
   	staDevices = ns.network.NetDeviceContainer ()
   	staDevices = wifi.Install (phy, mac, wifiStaNodes)
 
   	mac.SetType ("ns3::ApWifiMac",
-                 "Ssid", ns.wifi.SsidValue (ssid),
-                 "BeaconInterval", ns.core.TimeValue (ns.core.MicroSeconds (102400)),
-                 "BeaconGeneration", ns.core.BooleanValue (True),
-				 "BE_MaxAmpduSize", ns.core.UintegerValue (maxAmpduSize))
+				"Ssid", ns.wifi.SsidValue (ssid),
+				"BeaconInterval", ns.core.TimeValue (ns.core.MicroSeconds (102400)),
+				"BeaconGeneration", ns.core.BooleanValue (True),
+				"BE_MaxAmpduSize", ns.core.UintegerValue (maxAmpduSize))
 
   	apDevice = ns.network.NetDeviceContainer ()
  	apDevice = wifi.Install (phy, mac, wifiApNode)
