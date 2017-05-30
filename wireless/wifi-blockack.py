@@ -71,9 +71,9 @@ def main(argv):
                  "QosSupported", ns.core.BooleanValue (True),
                  "Ssid", ns.wifi.SsidValue (ssid),
                  "ActiveProbing", ns.core.BooleanValue (False),
-    # setting blockack threshold for sta's BE queue
+                 # setting blockack threshold for sta's BE queue
                  "BE_BlockAckThreshold", ns.core.UintegerValue (2),
-    # setting block inactivity timeout to 3*1024 = 3072 microseconds
+                 # setting block inactivity timeout to 3*1024 = 3072 microseconds
                  "BE_BlockAckInactivityTimeout", ns.core.UintegerValue (3))
 
     staDevice = wifi.Install (phy,mac,sta)
@@ -117,7 +117,6 @@ def main(argv):
 
     # Setting applications
     port = 9
-
     dataRate = ns.network.DataRate ("1Mb/s")
     onOff = ns.applications.OnOffHelper ("ns3::UdpSocketFactory", ns.network.Address (ns.network.InetSocketAddress (apIf.GetAddress (0), port)))
     onOff.SetAttribute ("DataRate", ns.network.DataRateValue (dataRate))
