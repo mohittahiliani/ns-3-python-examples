@@ -1,5 +1,6 @@
 # -*-  Mode: Python; -*-
 # /*
+#  * Copyright (c) 2015 Sébastien Deronne
 #  * Copyright (c) 2016 NITK Surathkal
 #  *
 #  * This program is free software; you can redistribute it and/or modify
@@ -15,9 +16,9 @@
 #  * along with this program; if not, write to the Free Software
 #  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #  *
+#  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
 #  * Ported to Python by: Kavya Sree Bhagavatula <kavyasbhagavatula@gmail.com>
 #  *                      Shrishti <shrishtiak26894@gmail.com>
-#  *                      Mohit P. Tahiliani <tahiliani@nitk.edu.in>
 #  */
 
 import ns.core
