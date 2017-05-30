@@ -1,5 +1,6 @@
 # -*-  Mode: Python; -*-
 # /*
+#  * Copyright (c) 2010 IITP RAS
 #  * Copyright (c) 2016 NITK Surathkal
 #  *
 #  * This program is free software; you can redistribute it and/or modify
@@ -15,31 +16,30 @@
 #  * along with this program; if not, write to the Free Software
 #  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #  *
+#  * Authors: Pavel Boyko <boyko@iitp.ru>
 #  * Ported to Python by: Shrishti <shrishtiak26894@gmail.com>
 #  *                      Kavya Sree Bhagavatula <kavyasbhagavatula@gmail.com>
-#  *                      Mohit P. Tahiliani <tahiliani@nitk.edu.in>
 #  */
 
 #
 # Classical hidden terminal problem and its RTS/CTS solution.
 #
 # Topology: [node 0] <-- -50 dB --> [node 1] <-- -50 dB --> [node 2]
-# 
-# This example illustrates the use of 
+#
+# This example illustrates the use of
 #  - Wifi in ad-hoc mode
 #  - Matrix propagation loss model
-#  - Use of OnOffApplication to generate CBR stream 
+#  - Use of OnOffApplication to generate CBR stream
 #  - IP flow monitor
 #
 
 import ns.core
 import ns.propagation
-import ns.network
 import ns.applications
-import ns.wifi
 import ns.mobility
 import ns.internet
 import ns.flow_monitor
+import ns.wifi
 
 # Run single 10 seconds experiment with enabled or disabled RTS/CTS mechanism
 def experiment(enableCtsRts):
