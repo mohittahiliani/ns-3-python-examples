@@ -34,7 +34,7 @@ import ns.internet
 import ns.applications
 import ns.network
 
-def main(argv):
+def main (argv):
 	# 
 	# Allow the user to override any of the defaults at
 	# run-time, via command-line arguments
@@ -47,7 +47,7 @@ def main(argv):
 	cmd.Parse (sys.argv)
 	
 	tracing = cmd.tracing
-	maxBytes = int(cmd.maxBytes)
+	maxBytes = int (cmd.maxBytes)
 	
 	#
 	# Explicitly create the nodes required by the topology (shown above).
