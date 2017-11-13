@@ -102,3 +102,49 @@ queueDiscs = ns.traffic_control.QueueDiscContainer ()
 tchBottleneck.SetRootQueueDisc ("ns3::RedQueueDisc")
 tchBottleneck.Install (d.GetLeft ().GetDevice (0))
 queueDiscs = tchBottleneck.Install (d.GetRight ().GetDevice (0))
+
+# Assign IP Addresses
+d.AssignIpv4Addresses (ns.internet.Ipv4AddressHelper (ns.network.Ipv4Address ("10.1.1.0"), ns.network.Ipv4Mask ("255.255.255.0")), ns.internet.Ipv4AddressHelper (ns.network.Ipv4Address ("10.2.1.0"), ns.network.Ipv4Mask ("255.255.255.0")), ns.internet.Ipv4AddressHelper (ns.network.Ipv4Address ("10.3.1.0"), ns.network.Ipv4Mask ("255.255.255.0")));
+
+# Install on/off app on all right side nodes
+clientHelper = ns.applications.OnOffHelper ("ns3::TcpSocketFactory", ns.network.Address ())
+clientHelper.SetAttribute ("OnTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+clientHelper.SetAttribute ("OffTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+
+sinkLocalAddress = ns.network.Address (ns.network.InetSocketAddress (ns.network.Ipv4Address.GetAny (), port));
+packetSinkHelper = ns.applications.PacketSinkHelper ("ns3::TcpSocketFactory", sinkLocalAddress);
+sinkApps = ns.network.ApplicationContainer ();
+for i in range(d.LeftCount ()):
+	sinkApps.Add (packetSinkHelper.Install (d.GetLeft (i)));
+sinkApps.Start (ns.core.Seconds (0.0));
+sinkApps.Stop (ns.core.Seconds (30.0));
+
+clientApps = ns.network.ApplicationContainer ();
+for i in range(d.RightCount ()):
+	# Create an on/off app sending packets to the left side
+	remoteAddress = ns.network.AddressValue (ns.network.InetSocketAddress (d.GetLeftIpv4Address (i), port));
+	clientHelper.SetAttribute ("Remote", remoteAddress);
+	clientApps.Add (clientHelper.Install (d.GetRight (i)));
+clientApps.Start (ns.core.Seconds (1.0)); # Start 1 second after sink
+clientApps.Stop (ns.core.Seconds (15.0)); # Stop before the sink
+
+ns.internet.Ipv4GlobalRoutingHelper.PopulateRoutingTables ();
+
+print "Running the simulation"
+ns.core.Simulator.Run ();
+
+st = queueDiscs.Get (0).GetStats ();
+
+if (st.GetNDroppedPackets (ns.traffic_control.RedQueueDisc.UNFORCED_DROP) == 0):
+ 	print "There should be some unforced drops"
+	sys.exit (1);
+
+if (st.GetNDroppedPackets (ns.traffic_control.QueueDisc.INTERNAL_QUEUE_DROP) != 0):
+	print "There should be zero drops due to queue full"
+	sys.exit (1);
+
+print "*** Stats from the bottleneck queue disc ***"
+print st
+print "Destroying the simulation" 
+
+ns.core.Simulator.Destroy ();
