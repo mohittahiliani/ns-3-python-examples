@@ -23,9 +23,9 @@ def main(argv):
 	cmd.AddValue ("useIpv6", "Use Ipv6")
 	cmd.Parse (argv)
 	
-	# 
-	# Explicitly create the nodes required by the topology (shown above).
-	# 
+	 
+	
+	
 	print "Create nodes."
 	n = ns.network.NodeContainer ()
 	n.Create (2)
@@ -61,7 +61,7 @@ def main(argv):
 
 	print "Create Applications."
 	# 
-	# Create a UdpEchoServer application on node one.
+	
 	#
 	port = 4000  # well-known echo port number
 	server = ns.applications.UdpEchoServerHelper (port)
@@ -69,18 +69,7 @@ def main(argv):
 	serverapps.Start (ns.core.Seconds (1.0))
 	serverapps.Stop (ns.core.Seconds (10.0))
 	
-	# 
-	# Create a UdpEchoClient application to send UDP datagrams from node zero to
-	# node one
-	#
-	 #packetSize = 1024
-	#maxPacketCount = 1
-	#interPacketInterval = ns.core.Seconds (1.0)
 	
-	#client = ns.applications.UdpEchoClientHelper (serverAddress, port)
-	#client.SetAttribute ("MaxPackets", ns.core.UintegerValue (maxPacketCount))
-	#client.SetAttribute ("Interval", ns.core.TimeValue (interPacketInterval))
-	#client.SetAttribute ("PacketSize", ns.core.UintegerValue (packetSize))
 	
 	MaxPacketSize = 1472
 	client = ns.applications.UdpTraceClientHelper (serverAddress, port, "")
@@ -91,17 +80,7 @@ def main(argv):
 	apps.Start (ns.core.Seconds (2.0))
 	apps.Stop (ns.core.Seconds (10.0))
 	
-	#
-	# Users may find it convenient to initialize echo packets with actual data;
-	# the below lines suggest how to do this
-	#
- 	# client.SetFill (apps.Get (0), "Hello World")
-	#
-	# client.SetFill (apps.Get (0), 0xa5, 1024)
-	#
-	# Following does not work as intended.
-	# fill = [0, 1, 2, 3, 4, 5, 6]
-	# client.SetFill (apps.Get (0), fill[0], 1024)
+	
 
 	asciitracer = ns.network.AsciiTraceHelper ()
 	csma.EnableAsciiAll (asciitracer.CreateFileStream ("udp-trace.tr"))
