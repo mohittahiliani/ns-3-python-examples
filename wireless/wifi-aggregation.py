@@ -142,7 +142,7 @@ def main(argv):
 	#  /* Setting applications */
 
 	serverAppA = ns.network.ApplicationContainer ()
-	myServerA=ns.applications.UdpServerHelper (9)
+	myServerA = ns.applications.UdpServerHelper (9)
 	serverAppA = myServerA.Install (ns.network.NodeContainer (wifiStaNode.Get (0)))
 	serverAppA.Start (ns.core.Seconds (0.0))
 	serverAppA.Stop (ns.core.Seconds (simulationTime + 1))
@@ -170,6 +170,12 @@ def main(argv):
 	clientAppB = myClientB.Install (ns.network.NodeContainer (wifiApNode.Get (1)))
 	clientAppB.Start (ns.core.Seconds (1.0))
 	clientAppB.Stop (ns.core.Seconds (simulationTime + 1))
+	
+	serverAppC = ns.network.ApplicationContainer ()
+	myServerC = ns.applications.UdpServerHelper (9)
+	serverAppC = myServerC.Install (ns.network.NodeContainer (wifiStaNode.Get (2)))
+	serverAppC.Start (ns.core.Seconds (0.0))
+	serverAppC.Stop (ns.core.Seconds (simulationTime + 1))
 
 	myClientC = ns.applications.UdpClientHelper (staInterfaceC.GetAddress (0), 9)
 	myClientC.SetAttribute ("MaxPackets", ns.core.UintegerValue (4294967295))
@@ -179,6 +185,12 @@ def main(argv):
 	clientAppC = myClientC.Install (ns.network.NodeContainer (wifiApNode.Get (2)))
 	clientAppC.Start (ns.core.Seconds (1.0))
 	clientAppC.Stop (ns.core.Seconds (simulationTime + 1))
+	
+	serverAppD = ns.network.ApplicationContainer ()
+	myServerD = ns.applications.UdpServerHelper (9)
+	serverAppD = myServerD.Install (ns.network.NodeContainer (wifiStaNode.Get (3)))
+	serverAppD.Start (ns.core.Seconds (0.0))
+	serverAppD.Stop (ns.core.Seconds (simulationTime + 1))
 
 	myClientD = ns.applications.UdpClientHelper (staInterfaceD.GetAddress (0), 9)
 	myClientD.SetAttribute ("MaxPackets", ns.core.UintegerValue (4294967295))
