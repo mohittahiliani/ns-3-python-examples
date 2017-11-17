@@ -1,0 +1,427 @@
+#Team Member : Siddhartha Chowdhuri (15CO246), Atul Singh (15CO151), Aswin Manoj (15CO209).
+
+import StringIO
+import sys
+import ns.core
+import ns.internet
+import ns.flow_monitor
+import ns.point_to_point 
+import ns.applications
+import ns.traffic_control
+
+
+n0n2 = ns.network.NodeContainer()
+n1n2 = ns.network.NodeContainer()
+n2n3 = ns.network.NodeContainer()
+n3n4 = ns.network.NodeContainer()
+n3n5 = ns.network.NodeContainer()
+
+
+i0i2 = ns.internet.Ipv4InterfaceContainer()
+i1i2 = ns.internet.Ipv4InterfaceContainer()
+i2i3 = ns.internet.Ipv4InterfaceContainer()
+i3i4 = ns.internet.Ipv4InterfaceContainer()
+i3i5 = ns.internet.Ipv4InterfaceContainer()
+
+
+def CheckQueueSize():
+    qSize = (RedQueueDisc) (queue).GetQueueSize ()
+    avgQueueSize += qSize;
+        checkTimes++;
+    Simulator.Schedule (ns.core.Seconds (0.01), &CheckQueueSize, queue);
+    fPlotQueue >> (filePlotQueue.str ().c_str ())
+    fPlotQueue << Simulator.Now ().GetSeconds ()
+    fPlotQueue.close ();
+    fPlotQueueAvg (filePlotQueueAvg.str ().c_str ())
+    fPlotQueueAvg.close ();
+
+def BuildAppsTest (test):
+    if (test == 1) or (test == 3):
+        # SINK is in the right side
+        port = 50000
+        sinkLocalAddress = ns.network.Address(ns.network.InetSocketAddress (ns.network.Ipv4Address.GetAny(),port))
+        sinkHelper = ns.applications.PacketSinkHelper("ns3::TcpSocketFactory", sinkLocalAddress)
+        sinkApp = ns.network.ApplicationContainer ();
+        sinkHelper.Install(n3n4.Get(1))
+        sinkApp.Start(ns.core.Seconds(sink_start_time))
+        sinkApp.Stop(ns.core.Seconds(sink_stop_time))
+
+        # Connection one
+        # Clients are in left side
+        
+        #* Create the OnOff applications to send TCP to the server
+        # * onoffhelper is a client that send data to TCP destination
+
+        clientHelper1 = ns.applications.OnOffHelper ("ns3::TcpSocketFactory", ns.network.Address ())
+        clientHelper1.SetAttribute ("OnTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+        clientHelper1.SetAttribute ("OffTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+        clientHelper1.SetAttribute ("DataRate", ns.core.DataRateValue (DataRate ("10Mb/s")))
+        clientHelper1.SetAttribute ("PacketSize", ns.core.UintegerValue (1000))
+
+        clientApps1 = ns.applications.ApplicationContainer ()
+
+        remoteAddress = ns.applications.AddressValue (InetSocketAddress (i3i4.GetAddress (1), port))
+        clientHelper1.SetAttribute ("Remote", remoteAddress)
+        clientApps1.Add (clientHelper1.Install (n0n2.Get (0)))
+        clientApps1.Start (Seconds (client_start_time))
+        clientApps1.Stop (Seconds (client_stop_time))
+
+        # Connection two
+
+        clientHelper2 = ns.applications.OnOffHelper ("ns3::TcpSocketFactory", ns.network.Address ())
+        clientHelper2.SetAttribute ("OnTime", ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=1]"))
+        clientHelper2.SetAttribute ("OffTime", ns.core.StringValue ("ns3::ConstantRandomVariable[Constant=0]"))
+        clientHelper2.SetAttribute ("DataRate", ns.core.DataRateValue (DataRate ("10Mb/s")))
+        clientHelper2.SetAttribute ("PacketSize", ns.core.UintegerValue (1000))
+
+        clientApps2 = ns.applications.ApplicationContainer ()
+
+        clientHelper2.SetAttribute ("Remote", remoteAddress)
+        clientApps2.Add (clientHelper2.Install (n1n2.Get (0)))
+        clientApps2.Start (Seconds (3.0))
+        clientApps2.Stop (Seconds (client_stop_time))
+
+    else:        # 4 or 5
+
+        # SINKs
+        # #1
+
+        port1 = 50001
+        sinkLocalAddress1 = ns.network.Address(ns.network.InetSocketAddress (ns.network.Ipv4Address.GetAny(),port))
+        sinkHelper1 = ns.applications.PacketSinkHelper("ns3::TcpSocketFactory", sinkLocalAddress)
+        sinkApp1 = ns.network.ApplicationContainer ();
+        sinkHelper1.Install(n3n4.Get(1))
+        sinkApp1.Start(ns.core.Seconds(sink_start_time))
+        sinkApp1.Stop(ns.core.Seconds(sink_stop_time))
+
+        # #2
+
+        port2 = 50002
+
+        sinkLocalAddress2 = ns.network.Address(ns.network.InetSocketAddress (ns.network.Ipv4Address.GetAny(),port))
+        sinkHelper2 = ns.applications.PacketSinkHelper("ns3::TcpSocketFactory", sinkLocalAddress)
+        sinkApp2 = ns.network.ApplicationContainer ();
+        sinkHelper2.Install(n3n5.Get(1))
+        sinkApp2.Start(ns.core.Seconds(sink_start_time))
+        sinkApp2.Stop(ns.core.Seconds(sink_stop_time))
+
+        # #3
+
+        port3 = 50003
+        
+        sinkLocalAddress3 = ns.network.Address(ns.network.InetSocketAddress (ns.network.Ipv4Address.GetAny(),port))
+        sinkHelper3 = ns.applications.PacketSinkHelper("ns3::TcpSocketFactory", sinkLocalAddress)
+        sinkApp3 = ns.network.ApplicationContainer ();
+        sinkHelper3.Install(n0n2.Get(1))
+        sinkApp3.Start(ns.core.Seconds(sink_start_time))
+        sinkApp3.Stop(ns.core.Seconds(sink_stop_time))
+
+        # #4
+
+        port4 = 50004
+
+        sinkLocalAddress4 = ns.network.Address(ns.network.InetSocketAddress (ns.network.Ipv4Address.GetAny(),port))
+        sinkHelper4 = ns.applications.PacketSinkHelper("ns3::TcpSocketFactory", sinkLocalAddress)
+        sinkApp4 = ns.network.ApplicationContainer ();
+        sinkHelper4.Install(n1n2.Get(1))
+        sinkApp4.Start(ns.core.Seconds(sink_start_time))
+        sinkApp4.Stop(ns.core.Seconds(sink_stop_time))
+
+        # Connection #1
+
+        #  * Create the OnOff applications to send TCP to the server
+        #  * onoffhelper is a client that send data to TCP destination
+
+        clientHelper1 = ns.applications.OnOffHelper ("ns3::TcpSocketFactory", ns.network.Address ())
+        clientHelper1.SetAttribute ("OnTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+        clientHelper1.SetAttribute ("OffTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+        clientHelper1.SetAttribute ("DataRate", ns.core.DataRateValue (ns.network.DataRate ("10Mb/s")))
+        clientHelper1.SetAttribute ("PacketSize", ns.core.UintegerValue (1000))
+
+        clientApps1 = ns.applications.ApplicationContainer ()
+
+        remoteAddress1 = ns.applications.AddressValue (InetSocketAddress (i3i4.GetAddress (1), port))
+        clientHelper1.SetAttribute ("Remote", remoteAddress)
+        clientApps1.Add (clientHelper1.Install (n0n2.Get (0)))
+        clientApps1.Start (Seconds (client_start_time))
+        clientApps1.Stop (Seconds (client_stop_time))
+
+        #  Connection #2
+
+        clientHelper2 = ns.applications.OnOffHelper ("ns3::TcpSocketFactory", ns.network.Address ())
+        clientHelper2.SetAttribute ("OnTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+        clientHelper2.SetAttribute ("OffTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+        clientHelper2.SetAttribute ("DataRate", ns.core.DataRateValue (ns.network.DataRate ("10Mb/s")))
+        clientHelper2.SetAttribute ("PacketSize", ns.core.UintegerValue (1000))
+
+        clientApps2 = ns.applications.ApplicationContainer ()
+
+        remoteAddress2 = ns.applications.AddressValue (InetSocketAddress (i3i5.GetAddress (1), port))
+        clientHelper2.SetAttribute ("Remote", remoteAddress)
+        clientApps2.Add (clientHelper1.Install (n1n2.Get (0)))
+        clientApps2.Start (Seconds (2.0))
+        clientApps2.Stop (Seconds (client_stop_time))
+
+        #  Connection #3
+
+        clientHelper3 = ns.applications.OnOffHelper ("ns3::TcpSocketFactory", ns.network.Address ())
+        clientHelper3.SetAttribute ("OnTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+        clientHelper3.SetAttribute ("OffTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+        clientHelper3.SetAttribute ("DataRate", ns.core.DataRateValue (ns.network.DataRate ("10Mb/s")))
+        clientHelper3.SetAttribute ("PacketSize", ns.core.UintegerValue (1000))
+
+        clientApps3 = ns.applications.ApplicationContainer ()
+
+        remoteAddress3 = ns.applications.AddressValue (InetSocketAddress (i0i2.GetAddress (1), port))
+        clientHelper3.SetAttribute ("Remote", remoteAddress)
+        clientApps3.Add (clientHelper1.Install (n3n4.Get (0)))
+        clientApps3.Start (Seconds (3.5))
+        clientApps3.Stop (Seconds (client_stop_time))
+
+        # Connection #4
+
+       
+        clientHelper4 = ns.applications.OnOffHelper ("ns3::TcpSocketFactory", ns.network.Address ())
+        clientHelper4.SetAttribute ("OnTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+        clientHelper4.SetAttribute ("OffTime", ns.core.StringValue ("ns3::UniformRandomVariable[Min=0.|Max=1.]"))
+        clientHelper4.SetAttribute ("DataRate",ns.core.DataRateValue(ns.network.DataRate("40b/s")))
+        clientHelper4.SetAttribute ("PacketSize", ns.core.UintegerValue (5 * 8))
+
+        clientApps4 = ns.applications.ApplicationContainer ()
+
+        remoteAddress4 = ns.applications.AddressValue (InetSocketAddress (i1i2.GetAddress (1), port))
+        clientHelper4.SetAttribute ("Remote", remoteAddress)
+        clientApps4.Add (clientHelper1.Install (n3n5.Get (0)))
+        clientApps4.Start (Seconds (1.0))
+        clientApps4.Stop (Seconds (client_stop_time))
+        
+
+def main(argv):
+
+    cmd = ns.core.CommandLine ()
+
+    cmd.redLinkDataRate = "1.5Mbps"
+    cmd.redLinkDelay = "20ms"
+    cmd.writeForPlot = False
+    cmd.writePcap = False
+    cmd.flowMonitor = False
+    
+    cmd.printRedStats = True
+
+    cmd.global_start_time = 0.0
+    cmd.global_stop_time = 11
+    cmd.sink_start_time = cmd.global_start_time
+    cmd.sink_stop_time = cmd.global_stop_time + 3.0
+    cmd.client_start_time = cmd.sink_start_time + 0.2
+    cmd.client_stop_time = cmd.global_stop_time - 2.0
+
+    #Configuration and command line parameter parsing
+    cmd.redTest = 1
+    # Will only save in the directory if enable opts below
+    cmd.pathOut = "." #Current directory
+
+    
+    cmd.AddValue ("testNumber", "Run test 1, 3, 4 or 5");
+    cmd.AddValue ("pathOut", "Path to save results from --writeForPlot/--writePcap/--writeFlowMonitor")
+    cmd.AddValue ("writeForPlot", "<0/1> to write results for plot (gnuplot)")
+    cmd.AddValue ("writePcap", "<0/1> to write results in pcapfile")
+    cmd.AddValue ("writeFlowMonitor", "<0/1> to enable Flow Monitor and write their results")
+    cmd.Parse(sys.argv)
+
+    redTest = cmd.redTest
+    pathOut = cmd.pathOut
+    redLinkDataRate = cmd.redLinkDataRate
+    redLinkDelay = cmd.redLinkDelay
+    writeForPlot = int(cmd.writeForPlot)
+    writePcap = int(cmd.writePcap)
+    flowMonitor = int(cmd.flowMonitor)
+    printRedStats = int(cmd.printRedStats)
+    global_start_time = int(cmd.global_start_time)
+    global_stop_time = int(cmd.global_stop_time)
+    sink_start_time = int(cmd.sink_start_time)
+    sink_stop_time = int(cmd.sink_stop_time)
+    client_start_time = int(cmd.client_start_time)
+    client_stop_time = int(cmd.client_stop_time)
+
+    if ((redTest != 1) and (redTest != 3) and (redTest != 4) and (redTest != 5)):
+        print("Invalid test number. Supported tests are 1, 3, 4 or 5")
+
+    print("Create Nodes")
+    c = ns.network.NodeContainer()
+    c.Create(6)
+    Names = ns.core.Names()
+
+    Names.Add ( "N0", c.Get (0))
+    Names.Add ( "N1", c.Get (1))
+    Names.Add ( "N2", c.Get (2))
+    Names.Add ( "N3", c.Get (3))
+    Names.Add ( "N4", c.Get (4))
+    Names.Add ( "N5", c.Get (5))
+    
+    n0n2 = ns.network.NodeContainer (ns.network.NodeContainer(c.Get (0)),ns.network.NodeContainer(c.Get (2)))
+    n0n2 = ns.network.NodeContainer (ns.network.NodeContainer(c.Get (1)),ns.network.NodeContainer(c.Get (2)))
+    n0n2 = ns.network.NodeContainer (ns.network.NodeContainer(c.Get (2)),ns.network.NodeContainer(c.Get (3)))
+    n0n2 = ns.network.NodeContainer (ns.network.NodeContainer(c.Get (3)),ns.network.NodeContainer(c.Get (4)))
+    n0n2 = ns.network.NodeContainer (ns.network.NodeContainer(c.Get (3)),ns.network.NodeContainer(c.Get (5)))
+
+
+    ns.core.Config.SetDefault ("ns3::TcpL4Protocol::SocketType", ns.core.StringValue ("ns3::TcpNewReno"))
+    #  42 = headers size
+
+    ns.core.Config.SetDefault ("ns3::TcpSocket::SegmentSize", ns.core.UintegerValue (1000 - 42))
+    ns.core.Config.SetDefault ("ns3::TcpSocket::DelAckCount", ns.core.UintegerValue (1))
+
+    ns.core.GlobalValue.Bind ("ChecksumEnabled",ns.core.BooleanValue(False))
+
+    meanPktSize = 500
+
+    #   RED params
+    ns.core.Config.SetDefault ("ns3::RedQueueDisc::Mode", ns.core.StringValue ("QUEUE_DISC_MODE_PACKETS"))
+    ns.core.Config.SetDefault ("ns3::RedQueueDisc::MeanPktSize", ns.core.UintegerValue (meanPktSize))
+    ns.core.Config.SetDefault ("ns3::RedQueueDisc::Wait", ns.core.BooleanValue (True))
+    ns.core.Config.SetDefault ("ns3::RedQueueDisc::Gentle", ns.core.BooleanValue (True))
+    ns.core.Config.SetDefault ("ns3::RedQueueDisc::QW", ns.core.DoubleValue (0.002))
+    ns.core.Config.SetDefault ("ns3::RedQueueDisc::MinTh", ns.core.DoubleValue (5))
+    ns.core.Config.SetDefault ("ns3::RedQueueDisc::MaxTh", ns.core.DoubleValue (15))
+    ns.core.Config.SetDefault ("ns3::RedQueueDisc::QueueLimit", ns.core.UintegerValue (1000))
+
+    if redTest == 3 :   #   test like 1, but with bad params
+
+        ns.core.Config.SetDefault ("ns3::RedQueueDisc::MaxTh", ns.core.DoubleValue (10))
+        ns.core.Config.SetDefault ("ns3::RedQueueDisc::QW", ns.core.DoubleValue (0.003))
+
+    elif redTest == 5 : #   test 5, same of test 4, but in byte mode
+
+        ns.core.Config.SetDefault ("ns3::RedQueueDisc::Mode", ns.core.StringValue ("QUEUE_DISC_MODE_BYTES"))
+        ns.core.Config.SetDefault ("ns3::RedQueueDisc::Ns1Compat", ns.core.BooleanValue (true))
+        ns.core.Config.SetDefault ("ns3::RedQueueDisc::MinTh", ns.core.DoubleValue (5 * meanPktSize))
+        ns.core.Config.SetDefault ("ns3::RedQueueDisc::MaxTh", ns.core.DoubleValue (15 * meanPktSize))
+        ns.core.Config.SetDefault ("ns3::RedQueueDisc::QueueLimit", ns.core.UintegerValue (1000 * meanPktSize))
+
+    internet = ns.internet.InternetStackHelper()
+    internet.Install (c)
+
+    tchPfifo = ns.traffic_control.TrafficControlHelper ()
+    handle = tchPfifo.SetRootQueueDisc ("ns3::PfifoFastQueueDisc");
+    tchPfifo.AddInternalQueues (handle, 3, "ns3::DropTailQueue", "MaxPackets", ns.core.UintegerValue (1000));
+
+    tchRed = ns.traffic_control.TrafficControlHelper ()
+    tchRed.SetRootQueueDisc ("ns3::RedQueueDisc", "LinkBandwidth", ns.core.StringValue(redLinkDataRate),
+                           "LinkDelay", ns.core.StringValue (redLinkDelay));
+
+
+    p2p = ns.point_to_point.PointToPointHelper()
+    p2p.SetQueue ("ns3::DropTailQueue");
+    p2p.SetDeviceAttribute ("DataRate", ns.core.StringValue ("10Mbps"));
+    p2p.SetChannelAttribute ("Delay", ns.core.StringValue ("2ms"));
+    devn0n2 = ns.network.NetDeviceContainer()
+    devnon2 = p2p.Install (n0n2)
+    tchPfifo.Install (devn0n2)
+
+    p2p.SetQueue ("ns3::DropTailQueue")
+    p2p.SetDeviceAttribute ("DataRate", ns.core.StringValue ("10Mbps"));
+    p2p.SetChannelAttribute ("Delay", ns.core.StringValue ("3ms"));
+    devn1n2 = ns.network.NetDeviceContainer()
+    devn1n2 = p2p.Install (n1n2)
+    tchPfifo.Install (devn1n2)
+
+    p2p.SetQueue ("ns3::DropTailQueue");
+    p2p.SetDeviceAttribute ("DataRate", ns.core.StringValue (redLinkDataRate));
+    p2p.SetChannelAttribute ("Delay", ns.core.StringValue (redLinkDelay));
+    devn2n3 = ns.network.NetDeviceContainer()
+    #   only backbone link has RED queue disc
+    devn2n3 = p2p.Install (n2n3)
+    queueDiscs = ns.traffic_control.QueueDiskContainer()  
+    queueDiscs = tchRed.Install (devn2n3);
+
+    p2p.SetQueue ("ns3::DropTailQueue")
+    p2p.SetDeviceAttribute ("DataRate", ns.core.StringValue ("10Mbps"))
+    p2p.SetChannelAttribute ("Delay", ns.core.StringValue ("4ms"))
+    devn3n4 = ns.network.NetDeviceContainer()
+    devn3n4 = p2p.Install (n3n4)
+    tchPfifo.Install (devn3n4)
+
+    p2p.SetQueue ("ns3::DropTailQueue")
+    p2p.SetDeviceAttribute ("DataRate", ns.core.StringValue ("10Mbps"))
+    p2p.SetChannelAttribute ("Delay", ns.core.StringValue ("5ms"))
+    devn3n5 = ns.network.NetDeviceContainer()
+    devn3n5 = p2p.Install (n3n5)
+    tchPfifo.Install (devn3n5)
+
+
+
+    ipv4 = ns.internet.Ipv4AddressHelper ()
+    ipv4.SetBase ("10.1.1.0", "255.255.255.0")
+    i0i2 = ipv4.Assign (devn0n2)
+
+    ipv4.SetBase ("10.1.2.0", "255.255.255.0");
+    i1i2 = ipv4.Assign (devn1n2);
+
+    ipv4.SetBase ("10.1.3.0", "255.255.255.0");
+    i2i3 = ipv4.Assign (devn2n3);
+
+    ipv4.SetBase ("10.1.4.0", "255.255.255.0");
+    i3i4 = ipv4.Assign (devn3n4);
+
+    ipv4.SetBase ("10.1.5.0", "255.255.255.0");
+    i3i5 = ipv4.Assign (devn3n5);
+
+    # Set up the routing
+    ns.internet.Ipv4GlobalRoutingHelper.PopulateRoutingTables ()
+
+    if redTest == 5:
+        queue = ns.traffic_control.QueueDisc()
+        queue = queueDiscs.Get(1)
+        RedQueueDisc = ns.traffic_control.RedQueueDisc()
+        RedQueueDisc(queue.SetMode(RedQueueDisc.QUEUE_DISC_MODE_PACKETS))
+        RedQueueDisc(queue.SetTh(5,15))
+        RedQueueDisc(queue.SetQueueLimit(1000))
+
+    BuildAppsTest (redTest)
+
+    if (writePcap == True):
+       ptp = ns.point_to_point.PointToPointHelper()
+       stmp = pathOut
+       ptp.EnablePcapAll (stmp.str ().c_str ())
+
+    flowmon = ns.flow_monitor.FlowMonitor()
+    if flowMonitor == True:
+            flowmonHelper = ns.flow_monitor.FlowMonitorHelper()
+            flowmon = flowmonHelper.InstallAll()
+    
+        
+    if writeForPlot == True:
+        filePlotQueue = StringIO.StringIO()
+        filePlotQueueAvg = StringIO.StringIO()
+        filePlotQueue.write(pathOut)
+        filePlotQueueAvg.write(pathOut)
+        remove (filePlotQueue.str ().c_str ())
+        remove (filePlotQueueAvg.str ().c_str ())
+        queue = ns.traffic_control.QueueDisc()
+        queue = queueDiscs.Get (0)
+        Simulator.ScheduleNow (&CheckQueueSize, queue)
+        
+        Simulator.Stop (Seconds (sink_stop_time))
+        Simulator.Run ()
+                
+    if (flowMonitor):
+            stmp = StringIO.StringIO()
+            stmp.write(pathOut)
+            flowmon.SerializeToXmlFile (stmp.str ().c_str (), false, false);
+
+        
+    if (printRedStats):
+        st = ns.traffic_control.QueueDisc.Stats()
+        st = queueDiscs.Get(0).GetStats ()
+        print("*** RED stats from Node 2 queue disc ***")
+        print(st)
+        st = queueDiscs.Get (1).GetStats ();
+        print("*** RED stats from Node 3 queue disc ***")
+        print(st)
+        
+    Simulator.Destroy ();
+
+
+
+if __name__ == '__main__':
+    main (sys.argv)
