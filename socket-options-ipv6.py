@@ -21,7 +21,7 @@ def ReceivePacket(socket):
 	print "Received one packet!"
 	packet=socket.Recv()
 
-	tclassTag = ns3.socket.SocketIpv6TclassTag();
+	tclassTag = ns3.socket.SocketIpv6TclassTag()
 	if packet.RemovePacketTag(tclassTag) == True:
 		print (" TCLASS = ", tclassTag.GetTclass ())
 
